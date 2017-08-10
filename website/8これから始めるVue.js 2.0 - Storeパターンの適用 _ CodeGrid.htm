@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)https://app.codegrid.net/entry/2016-vue-8 -->
+<html lang="ja" data-env="prod" data-runapp=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>これから始めるVue.js 2.0 - Storeパターンの適用 | CodeGrid</title><meta property="og:type" content="article"><meta property="og:title" content="これから始めるVue.js 2.0 - Storeパターンの適用 | CodeGrid"><meta name="description" content="Vue.jsで作成したメモアプリケーションの状態管理方法を、単純なStoreパターンに置き換えていきます。中央集権的な状態管理とはどのようなものか、これまでの状態管理方法との違いを確認しつつ、作業を進めます。"><meta property="og:description" content="Vue.jsで作成したメモアプリケーションの状態管理方法を、単純なStoreパターンに置き換えていきます。中央集権的な状態管理とはどのようなものか、これまでの状態管理方法との違いを確認しつつ、作業を進めます。"><meta property="og:locale" content="ja_JP"><meta property="og:site_name" content="CodeGrid"><meta property="og:image" content="https://app.codegrid.net/img/ogp_1024.png"><meta property="og:email" content="codegrid@pxgrid.com"><meta property="twitter:card" content="summary"><meta property="twitter:site" content="@CodeGrid"><meta name="csrfToken" content="d5413f335ba3e732001a9b5ab8590ce83b5c5c77"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="application-name" content="CodeGrid"><link rel="shortcut icon" href="https://app.codegrid.net/favicon.ico"><link rel="apple-touch-icon" href="https://app.codegrid.net/icon.png"><link rel="apple-touch-icon-precomposed" href="https://app.codegrid.net/icon.png"><link rel="shortcut icon" href="https://app.codegrid.net/icon.png"><link rel="icon" href="https://app.codegrid.net/icon.png"><link rel="stylesheet" href="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/codegrid-ui.min.css"><script async="" src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/analytics.js"></script><script src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/codegrid-ui.min.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-25599414-2', 'auto');
+ga('send', 'pageview');</script><link rel="stylesheet" href="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/build.css"><script type="text/javascript" charset="utf-8" async="" src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/button.c794c32aa66923d37742ceab3914757c.js"></script><style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -100px !important;
+    width: 200px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+</style></head><body><div class="CG2-pageHeaderPlacer"><header id="js-page-header" class="CG2-pageHeader"><div class="CG2-pageHeader__inner"><div class="CG2-pageHeader__logo"><a href="https://app.codegrid.net/"><img src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/logo.svg" alt="CodeGrid" width="125" height="24"></a></div><div class="CG2-pageHeader__appNav"><ul><li><a href="https://app.codegrid.net/latest">最新記事一覧</a></li><li><a href="https://app.codegrid.net/favorites">お気に入り一覧</a></li></ul></div><div class="CG2-pageHeader__search"><div class="CG2-pageHeader__searchInner"><form action="https://app.codegrid.net/search" method="get"><input type="search" name="q" value=""></form></div></div><div class="CG2-pageHeader__user"><div class="CG2-pageHeader__userHeader"><div class="CG2-pageHeader__userName">devfrontall@gmail.com</div><div class="CG2-pageHeader__userAvatar"><img src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/photo.jpg" alt="" width="56" height="56"></div><div class="CG2-pageHeader__userOpener"></div></div><div class="CG2-pageHeader__userMenu"><div class="CG2-pageHeader__userMenuInner"><ul><li><a href="https://app.codegrid.net/setting" class="CG2-button CG2-button--fullWidth CG2--alignCenter">設定</a></li><li><a href="https://app.codegrid.net/signout" class="CG2-button CG2-button--fullWidth CG2--alignCenter">ログアウト</a></li></ul></div></div></div></div><div data-drawer-toggle="" class="CG2-pageHeader__opener"></div></header></div><div class="CG2-drawer"><div class="CG2-drawer__panel"><div class="CG2-drawer__panelViewport"><div class="CG2-drawer__panelBody"><div class="CG2-drawerBody"><div class="CG2-drawerBody__user"><div class="CG2-drawerBody__userAvatar"><img src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/photo.jpg" alt="" width="56" height="56"></div><div class="CG2-drawerBody__userName">devfrontall@gmail.com</div></div><div class="CG2-drawerBody__nav"><ul><li><a href="https://app.codegrid.net/">アプリトップ</a></li><li><a href="https://app.codegrid.net/latest">最新記事一覧</a></li><li><a href="https://app.codegrid.net/expose">無料公開記事一覧</a></li><li><a href="https://app.codegrid.net/author">著者一覧</a></li><li><a href="https://app.codegrid.net/favorites">お気に入り一覧</a></li><li><a href="https://app.codegrid.net/popular">人気記事一覧</a></li></ul></div><div class="CG2-drawerBody__userNav"><ul><li><a href="https://app.codegrid.net/setting" class="CG2-button CG2-button--fullWidth">設定</a></li></ul></div><div class="CG2-drawerBody__separator"></div><div class="CG2-drawerBody__search"><div class="CG2-drawerBody__searchInner"><form action="https://app.codegrid.net/search" method="get"><input type="search" name="q" value=""></form></div></div><div class="CG2-drawerBody__nav"><ul><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/architecture"><span class="CG2-icon-cat-architecture"></span>設計</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/future"><span class="CG2-icon-cat-future"></span>未来・次世代</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/talk"><span class="CG2-icon-cat-talk"></span>座談会</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/mastering"><span class="CG2-icon-cat-mastering"></span>実践</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/elementary"><span class="CG2-icon-cat-elementary"></span>入門</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/standards"><span class="CG2-icon-cat-standards"></span>仕様解説</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/work-style"><span class="CG2-icon-cat-work-style"></span>仕事術</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/report"><span class="CG2-icon-cat-report"></span>レポート</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/design"><span class="CG2-icon-cat-design"></span>デザイン</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/discussion"><span class="CG2-icon-cat-discussion"></span>ディスカッション</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/interview"><span class="CG2-icon-cat-interview"></span>インタビュー</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/survey"><span class="CG2-icon-cat-survey"></span>アンケート</a></li></ul></div><div class="CG2-drawerBody__separator"></div><div class="CG2-drawerBody__nav"><ul><li><a href="https://www.codegrid.net/" target="_blank">CodeGridについて</a></li><li><a href="https://www.codegrid.net/payment.html" target="_blank">料金</a></li><li><a href="https://www.codegrid.net/organization.html" target="_blank">団体購読</a></li><li><a href="https://www.codegrid.net/faq.html" target="_blank">よくある質問</a></li><li><a href="https://www.codegrid.net/publication.html" target="_blank">書籍</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://twitter.com/codegrid" target="_blank"><span class="CG2-icon-twitter"></span>公式Twitter</a></li></ul></div><div class="CG2-drawerBody__separator"></div><div class="CG2-drawerBody__nav"><ul><li class="CG2-drawerBody__navItem--plane"><a href="https://www.codegrid.net/contact.html" target="_blank">お問い合わせ</a></li><li class="CG2-drawerBody__navItem--plane"><a href="https://www.codegrid.net/terms.html" target="_blank">利用規約</a></li><li class="CG2-drawerBody__navItem--plane"><a href="https://www.codegrid.net/privacy.html" target="_blank">プライバシーポリシー</a></li><li class="CG2-drawerBody__navItem--plane"><a href="https://www.codegrid.net/tokutei.html" target="_blank">特定商取引法に基づく表示</a></li></ul></div></div></div></div><div data-drawer-hide="" class="CG2-drawer__panelLeft"></div></div><div data-drawer-close="" class="CG2-drawer__bg"></div></div><div data-page-id="entry-main" class="CG2-articleHeader"><div class="CG2-articleHeader__inner"><div class="CG2-articleHeader__category"><div class="CG2-articleHeader__categoryIcon"><span class="CG2-icon-cat-mastering"></span></div><div class="CG2-articleHeader__categoryName">実践</div></div><div class="CG2-articleHeader__main"><div class="CG2-articleHeader__mainInner"><div class="CG2-articleHeader__series">これから始めるVue.js 2.0</div><div class="CG2-articleHeader__title">第8回 Storeパターンの適用</div><div class="CG2-articleHeader__abstract"><p>Vue.jsで作成したメモアプリケーションの状態管理方法を、単純なStoreパターンに置き換えていきます。中央集権的な状態管理とはどのようなものか、これまでの状態管理方法との違いを確認しつつ、作業を進めます。</p></div><div class="CG2-articleHeader__pubDate">2017年01月12日発行</div><div class="CG2-articleHeader__authors"><div class="CG2-articleHeader__author"><a href="https://app.codegrid.net/author/nakajmg"><div class="CG2-articleHeader__authorImage"><img src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/5713bf32ecfacfc3b921151a453cc18e" alt="中島 直博"></div><div class="CG2-articleHeader__authorName">中島 直博</div><div class="CG2-articleHeader__authorTitle">フロントエンド・エンジニア</div></a></div></div></div></div><div class="CG2-articleHeader__pagenation"><ul><li class="CG2-articleHeader__pagenationPrev"><a href="https://app.codegrid.net/entry/2016-vue-7">前回</a></li><li class="CG2-articleHeader__pagenationNext"><a href="https://app.codegrid.net/entry/2016-vue-9">次回</a></li></ul></div><div class="CG2-articleHeader__utils"><ul><li><a href="https://app.codegrid.net/series/2016-vue" class="CG2-transparentButton"><span class="CG2-icon-list"></span>このシリーズの記事一覧をみる</a></li><li><button id="js-toggle-fav-series" type="button" data-id="580dadd53504b70f00c2c70c" aria-pressed="false" class="CG2-transparentButton"><span aria-hidden="true" class="CG2-icon-star"></span><span class="CG2-transparentButton__favText">このシリーズをお気に入りに登録</span></button></li><li><button id="js-unread" data-id="586f87ca5d8e81000431e385" class="CG2-transparentButton">未読にする</button></li></ul></div></div><div style="background-image: url(//cdn.codegrid.net/2016-vue/main-blur.jpg)" class="CG2-articleHeader__bg"></div></div><div class="CG2-narrowLayout"><div class="CG2-narrowLayout__main"><section class="CG2-articleTOC"><header class="CG2-articleTOC__header"><h1>目次</h1></header><div class="CG2-articleTOC__body"><div class="CG2-articleTOC__list"><ul><li><a href="https://app.codegrid.net/entry/2016-vue-8#toc-0">store.jsの作成</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-8#toc-1">stateを定義する</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-8#toc-2">actionsを定義する</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-8#toc-3">stateとactionsをexportする</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-8#toc-4">Storeを利用する際のルール</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-8#toc-5">App.vueから不要な処理を削除する</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-8#toc-6">Items.vueでStoreを参照する</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-8#toc-7">Rootの変更</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-8#toc-8">Add.vue</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-8#toc-9">アプリケーションを実行する</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-8#toc-10">おわりに</a></li></ul></div></div></section><article id="js-entry-article" class="CG2-article"><p>前回、状態管理について破綻しやすい例とStoreパターンについて解説しました。今回は、メモアプリケーションの状態管理をStoreパターンで置き換えます。</p>
+<p>Storeパターンについては、前回の記事を参照してください。詳しく解説しています。</p>
+<ul>
+<li><a href="https://app.codegrid.net/entry/2016-vue-7">これから始めるVue.js 2.0 第7回 アプリケーションの状態管理</a></li>
+</ul>
+<h2 id="store-js-">store.jsの作成</h2>
+<p>まず、空のファイルを<code>src/store.js</code>として保存します。<code>store.js</code>は状態を格納する<code>state</code>と状態を変更する<code>actions</code>の2つを、まとめて<code>export</code>するようにします。</p>
+<h2 id="state-">stateを定義する</h2>
+<p>アプリケーションの状態は<code>state</code>に格納します。次のように<code>state</code>を定義します。</p>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">store.js</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">const</span> state <span class="token operator">=</span> <span class="token punctuation">{</span>
+  memos<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</div>
+</section>
+<p>メモアプリケーション全体として必要な情報は<code>memos</code>のみになります。ほかの状態はコンポーネントのプライベートな状態として定義します。</p>
+<h2 id="actions-">actionsを定義する</h2>
+<p>状態の変更を行うActionをまとめた<code>actions</code>を、次のように定義します。</p>
+<p><code>actions</code>にはメモの追加（<code>addMemo</code>）、メモの削除（<code>removeMemo</code>）、メモの編集（<code>updateMemo</code>）という3つのActionが定義されています。</p>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">状態の変更を行うactionsの定義（store.js）</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-javascript"><code class=" language-javascript"><span class="token operator">...</span>
+<span class="token keyword">const</span> actions <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function">addMemo</span><span class="token punctuation">(</span>newMemo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// memos の中のメモで一番大きい id に 1 を足した値を取得する</span>
+    newMemo<span class="token punctuation">.</span>id <span class="token operator">=</span> state<span class="token punctuation">.</span>memos<span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> memo<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> id <span class="token operator">&lt;</span> memo<span class="token punctuation">.</span>id <span class="token operator">?</span> memo<span class="token punctuation">.</span>id <span class="token punctuation">:</span> id
+      <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token number">1</span>
+    state<span class="token punctuation">.</span>memos<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>newMemo<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">removeMemo</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> targetId <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// memos の中から id が一致するメモの index を取得する</span>
+    <span class="token keyword">const</span> index <span class="token operator">=</span> state<span class="token punctuation">.</span>memos<span class="token punctuation">.</span><span class="token function">findIndex</span><span class="token punctuation">(</span><span class="token punctuation">(</span>memo<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> memo<span class="token punctuation">.</span>id <span class="token operator">===</span> targetId
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    state<span class="token punctuation">.</span>memos<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span>index<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">updateMemo</span><span class="token punctuation">(</span>memo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> targetId <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>memo<span class="token punctuation">.</span>id<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// memos の中から id が一致するメモの index を返す</span>
+    <span class="token keyword">const</span> index <span class="token operator">=</span> state<span class="token punctuation">.</span>memos<span class="token punctuation">.</span><span class="token function">findIndex</span><span class="token punctuation">(</span><span class="token punctuation">(</span>memo<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> memo<span class="token punctuation">.</span>id <span class="token operator">===</span> targetId
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    state<span class="token punctuation">.</span>memos<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span>index<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> memo<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</div>
+</section>
+<h3 id="-">デバッグ用の出力を追加する</h3>
+<p>各Actionが呼ばれたことがわかるように、3つのActionそれぞれにデバッグ用の出力処理を追加します。次のように、デバッグ用の出力を行うかどうか判定するための<code>debug</code>を定義して、<code>debug</code>が<code>true</code>のときに<code>console.log()</code>でどのActionが呼ばれたかを出力します。</p>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">デバッグ用の出力処理（store.js）</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-javascript"><code class=" language-javascript"><span class="token operator">...</span>
+<span class="token keyword">const</span> debug <span class="token operator">=</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span>NODE_ENV <span class="token operator">!==</span> <span class="token string">'production'</span>
+<span class="token keyword">const</span> actions <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function">addMemo</span><span class="token punctuation">(</span>newMemo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    debug <span class="token operator">&amp;&amp;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`addMemo triggered with`</span></span><span class="token punctuation">,</span> newMemo<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// 変更なし</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">removeMemo</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    debug <span class="token operator">&amp;&amp;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`removeMemo triggered with`</span></span><span class="token punctuation">,</span> id<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// 変更なし</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">updateMemo</span><span class="token punctuation">(</span>memo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    debug <span class="token operator">&amp;&amp;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`updateMemo triggered with`</span></span><span class="token punctuation">,</span> memo<span class="token punctuation">)</span>
+    <span class="token comment" spellcheck="true">// 変更なし</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</div>
+</section>
+<p><code>process.env.NODE_ENV</code>には、vue-loader（webpack）がビルド時に使う環境変数が格納されています。<code>npm run dev</code>で実行したサーバーでは<code>'development'</code>が格納され、<code>npm run build</code>を実行したときには<code>'production'</code>が格納されます。この変数を参照することで、開発時にだけ実行したい処理を実装できます。ここでは<code>NODE_ENV</code>が<code>'production'</code>以外のときに<code>debug</code>が<code>true</code>になります。</p>
+<p><code>NODE_ENV</code>の値は<code>config/dev.env.js</code>と<code>config/prod.env.js</code>で設定されます。</p>
+<ul>
+<li><a href="https://github.com/codegrid/2016-vuejs/blob/master/8/store/config/dev.env.js" target="_blank">config/dev.env.js</a></li>
+<li><a href="https://github.com/codegrid/2016-vuejs/blob/master/8/store/config/prod.env.js" target="_blank">config/prod.env.js</a></li>
+</ul>
+<h3 id="-">同じ処理をユーティリティとして切り出す</h3>
+<p>メモを削除する<code>removeMemo</code>と、メモを編集する<code>updateMemo</code>は、<code>memos</code>の中から該当する<code>id</code>を持ったメモの<code>index</code>を探すという同じ処理を行っています。このユーティリティのような関数は<code>util</code>といったオブジェクトにまとめて定義すると、Actionごとの処理がわかりやすくなり、修正が必要になったときも修正箇所を減らすことができます。</p>
+<p><code>memos</code>中から該当する<code>id</code>を持ったメモの<code>index</code>を返す関数を、<code>util.findIndex</code>として定義します。</p>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">特定のidを持つメモのindexを返す関数（store.js）</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-javascript"><code class=" language-javascript"><span class="token operator">...</span>
+<span class="token keyword">const</span> util <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// memos の中から id が一致するメモの index を返す</span>
+  <span class="token function">findIndex</span><span class="token punctuation">(</span>memos<span class="token punctuation">,</span> id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> targetId <span class="token operator">=</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> memos<span class="token punctuation">.</span><span class="token function">findIndex</span><span class="token punctuation">(</span><span class="token punctuation">(</span>memo<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> memo<span class="token punctuation">.</span>id <span class="token operator">===</span> targetId
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> debug <span class="token operator">=</span> process<span class="token punctuation">.</span>env<span class="token punctuation">.</span>NODE_ENV <span class="token operator">!==</span> <span class="token string">'production'</span>
+<span class="token keyword">const</span> actions <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token function">addMemo</span><span class="token punctuation">(</span>newMemo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// 変更なし</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">removeMemo</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    debug <span class="token operator">&amp;&amp;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`removeMemo triggered with`</span></span><span class="token punctuation">,</span> id<span class="token punctuation">)</span>
+    <span class="token keyword">const</span> index <span class="token operator">=</span> util<span class="token punctuation">.</span><span class="token function">findIndex</span><span class="token punctuation">(</span>state<span class="token punctuation">.</span>memos<span class="token punctuation">,</span> id<span class="token punctuation">)</span>
+    state<span class="token punctuation">.</span>memos<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span>index<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">updateMemo</span><span class="token punctuation">(</span>memo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    debug <span class="token operator">&amp;&amp;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`updateMemo triggered with`</span></span><span class="token punctuation">,</span> memo<span class="token punctuation">)</span>
+    <span class="token keyword">const</span> index <span class="token operator">=</span> util<span class="token punctuation">.</span><span class="token function">findIndex</span><span class="token punctuation">(</span>state<span class="token punctuation">.</span>memos<span class="token punctuation">,</span> memo<span class="token punctuation">.</span>id<span class="token punctuation">)</span>
+    state<span class="token punctuation">.</span>memos<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span>index<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> memo<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</div>
+</section>
+<p><code>util</code>に定義する関数は<code>state</code>を直接参照せずに、引数として必要な値を受け取るようにしておくと、より使い回しがしやすくなります。</p>
+<h2 id="state-actions-export-">stateとactionsをexportする</h2>
+<p>最後に<code>state</code>と<code>actions</code>をほかの箇所で使えるように<code>export</code>します。</p>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">stateとactionsをexportする（store.js）</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-javascript"><code class=" language-javascript"><span class="token operator">...</span>
+<span class="token keyword">const</span> actions <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// 変更なし</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  state<span class="token punctuation">,</span>
+  actions
+<span class="token punctuation">}</span>
+</code></pre>
+</div>
+</section>
+<p>これでStoreの準備は完了です。このStoreを、ページのコンポーネントから参照して利用します。</p>
+<ul>
+<li><a href="https://github.com/codegrid/2016-vuejs/blob/master/8/store/src/store.js" target="_blank">src/store.js</a></li>
+</ul>
+<h2 id="store-">Storeを利用する際のルール</h2>
+<p>Storeは次のようなルール（制限）を設けて利用します。</p>
+<ul>
+<li><code>src/page</code>のコンポーネントでだけStoreを<code>import</code>する</li>
+</ul>
+<p>具体的なコードとしては、以下の3点がポイントとなります。</p>
+<ul>
+<li><code>src/components</code>のコンポーネントはStoreの<code>state</code>を参照しない</li>
+<li><code>src/components</code>のコンポーネントはActionを実行しない</li>
+<li>Actionは<code>src/page</code>のコンポーネントが実行する</li>
+</ul>
+<p><code>src/components</code>の各コンポーネントは、レンダリングに必要なデータを<code>props</code>で受け取るようにして、Storeの<code>state</code>を直接参照しないようにします。また、Actionを実行せずに、現状のまま自身に<code>$emit()</code>を実行して、親コンポーネントにイベントを伝えるようにします。こうして、イベントは親コンポーネントで監視するようにします。</p>
+<p>このルールはStoreとコンポーネントを疎結合にするためのもので、コンポーネントの再利用性を高めることになります。<code>src/page</code>のコンポーネントは再利用することはないので、Storeと密結合になっても問題ありません。</p>
+<h2 id="app-vue-">App.vueから不要な処理を削除する</h2>
+<p>状態はStoreで管理して、状態の変更は<code>page</code>のコンポーネントから実行するので、これまで<code>App.vue</code>で行っていた処理のほとんどが不要になります。<code>App.vue</code>を次のように変更します。</p>
+<ul>
+<li>参考：変更前の<a href="https://github.com/codegrid/2016-vuejs/blob/master/6/memo/src/App.vue" target="_blank">src/App.vue</a></li>
+</ul>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">src/App.vue</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-html"><code class=" language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>scss<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token style language-css">
+  <span class="token comment" spellcheck="true">/* 変更なし */</span>
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>app<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>nav-link</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>nav-link</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>router-view</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>contents<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>router-view</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script language-javascript">
+<span class="token keyword">import</span> NavLink <span class="token keyword">from</span> <span class="token string">'./components/NavLink'</span>
+
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  name<span class="token punctuation">:</span> <span class="token string">'app'</span><span class="token punctuation">,</span>
+  components<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    NavLink
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+</div>
+</section>
+<p>ここでは<code>data</code>と<code>computed</code>と<code>methods</code>を削除します。また、<code>&lt;router-view&gt;</code>に渡していた<code>props</code>とイベントの監視もすべて削除します。ここで削除した処理は<code>src/page</code>のコンポーネントが行うように変更していきます。</p>
+<ul>
+<li>変更後の<a href="https://github.com/codegrid/2016-vuejs/blob/master/8/store/src/App.vue" target="_blank">src/App.vue</a></li>
+</ul>
+<h2 id="items-vue-store-">Items.vueでStoreを参照する</h2>
+<p>次に<code>src/page</code>のコンポーネントのひとつ<code>Items.vue</code>を変更します。</p>
+<ul>
+<li>参考：変更前の<a href="https://github.com/codegrid/2016-vuejs/blob/master/6/memo/src/page/Items.vue" target="_blank">src/page/Items.vue</a></li>
+</ul>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">src/page/Items.vue</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-html"><code class=" language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>style</span> <span class="token attr-name">scoped</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>scss<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token style language-css">
+  <span class="token comment" spellcheck="true">/* 変更なし */</span>
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>style</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>layout-items<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>list-view</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>layout-items-left<span class="token punctuation">"</span></span>
+      <span class="token attr-name">:memos</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>sharedState.memos<span class="token punctuation">"</span></span>
+      <span class="token attr-name">@remove</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>remove<span class="token punctuation">"</span></span>
+      <span class="token attr-name">@select</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>select<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>list-view</span><span class="token punctuation">&gt;</span></span>
+    &lt;router-view class="layout-items-right"
+      <span class="token comment" spellcheck="true">&lt;!-- 変更なし  --&gt;</span>
+      &gt;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>router-view</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script language-javascript">
+  <span class="token keyword">import</span> ListView <span class="token keyword">from</span> <span class="token string">'../components/ListView'</span>
+  <span class="token keyword">import</span> store <span class="token keyword">from</span> <span class="token string">'../store'</span>
+  <span class="token keyword">export</span> <span class="token keyword">default</span><span class="token punctuation">{</span>
+    <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token punctuation">{</span>
+        sharedState<span class="token punctuation">:</span> store<span class="token punctuation">.</span>state
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    computed<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+      <span class="token function">selectedMemo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> id <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>$route<span class="token punctuation">.</span>params<span class="token punctuation">.</span>id
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>id <span class="token operator">!==</span> undefined<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">const</span> memo <span class="token operator">=</span> <span class="token keyword">this</span><span class="token punctuation">.</span>sharedState<span class="token punctuation">.</span>memos<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token punctuation">(</span>memo<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+            <span class="token keyword">return</span> memo<span class="token punctuation">.</span>id <span class="token operator">===</span> <span class="token function">parseInt</span><span class="token punctuation">(</span>id<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span>
+          <span class="token keyword">return</span> memo
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    methods<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+      <span class="token function">remove</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        store<span class="token punctuation">.</span>actions<span class="token punctuation">.</span><span class="token function">removeMemo</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token comment" spellcheck="true">// 変更なし</span>
+      <span class="token function">update</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        store<span class="token punctuation">.</span>actions<span class="token punctuation">.</span><span class="token function">updateMemo</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>$router<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'items'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token comment" spellcheck="true">// 変更なし</span>
+  <span class="token punctuation">}</span>
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+</div>
+</section>
+<p><code>import store</code>でStoreをインポートします。<code>data.sharedState</code>としてStoreの<code>state</code>を参照して、<code>memos</code>を参照していた箇所を<code>sharedState.memos</code>と変更します。<code>this.$emit()</code>で<code>App.vue</code>で処理をさせていた<code>remove</code>と<code>udpate</code>を、それぞれの処理に対応するAction（<code>store.actions.removeMemo()</code>と<code>store.actions.updateMemo()</code>）の実行に置き換えます。</p>
+<ul>
+<li>変更後の<a href="https://github.com/codegrid/2016-vuejs/blob/master/8/store/src/page/Items.vue" target="_blank">src/page/Items.vue</a></li>
+</ul>
+<h2 id="root-">Rootの変更</h2>
+<p><code>src/page</code>の<code>Root.vue</code>も同じようにStoreを参照するように変更します。</p>
+<ul>
+<li>参考：変更前の<a href="https://github.com/codegrid/2016-vuejs/blob/master/6/memo/src/page/Root.vue" target="_blank">src/page/Root.vue</a></li>
+</ul>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">src/page/Root.vue</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-html"><code class=" language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>list-view</span>
+      <span class="token attr-name">:memos</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>sharedState.memos<span class="token punctuation">"</span></span>
+      <span class="token attr-name">@remove</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>remove<span class="token punctuation">"</span></span>
+      <span class="token attr-name">:count</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>privateState.count<span class="token punctuation">"</span></span>
+      <span class="token attr-name">:sort</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>privateState.sort<span class="token punctuation">"</span></span>
+    <span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>list-view</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>router-link</span> <span class="token attr-name">:to</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>{name: <span class="token punctuation">'</span>items<span class="token punctuation">'</span>}<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>すべて見る<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>router-link</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script language-javascript">
+  <span class="token keyword">import</span> ListView <span class="token keyword">from</span> <span class="token string">'../components/ListView'</span>
+  <span class="token keyword">import</span> store <span class="token keyword">from</span> <span class="token string">'../store'</span>
+  <span class="token keyword">export</span> <span class="token keyword">default</span><span class="token punctuation">{</span>
+    <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token punctuation">{</span>
+        sharedState<span class="token punctuation">:</span> store<span class="token punctuation">.</span>state<span class="token punctuation">,</span>
+        privateState<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+          count<span class="token punctuation">:</span> <span class="token number">3</span><span class="token punctuation">,</span>
+          sort<span class="token punctuation">:</span> <span class="token string">'latest'</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    methods<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+      <span class="token function">remove</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        store<span class="token punctuation">.</span>actions<span class="token punctuation">.</span><span class="token function">removeMemo</span><span class="token punctuation">(</span>id<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    components<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+      ListView
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+</div>
+</section>
+<p><code>props</code>で受け取っていた<code>memos</code>への参照を、<code>sharedState.memos</code>に変更します。もともとあった<code>data</code>は、<code>Items</code>特有の状態なので<code>privateState</code>に移します。</p>
+<ul>
+<li>変更後の<a href="https://github.com/codegrid/2016-vuejs/blob/master/8/store/src/page/Root.vue" target="_blank">src/page/Root.vue</a></li>
+</ul>
+<h2 id="add-vue">Add.vue</h2>
+<p><code>src/page</code>の<code>Add.vue</code>も同じようにStoreを参照するように変更します。</p>
+<ul>
+<li>参考：変更前の<a href="https://github.com/codegrid/2016-vuejs/blob/master/6/memo/src/page/Add.vue" target="_blank">src/page/Add.vue</a></li>
+</ul>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">src/page/Add.vue</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-html"><code class=" language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">&gt;</span></span>
+  <span class="token comment" spellcheck="true">&lt;!-- 変更なし --&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script language-javascript">
+  <span class="token keyword">import</span> EditorView <span class="token keyword">from</span> <span class="token string">'../components/EditorView'</span>
+  <span class="token keyword">import</span> store <span class="token keyword">from</span> <span class="token string">'../store'</span>
+
+  <span class="token keyword">export</span> <span class="token keyword">default</span><span class="token punctuation">{</span>
+    methods<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+      <span class="token function">add</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        store<span class="token punctuation">.</span>actions<span class="token punctuation">.</span><span class="token function">addMemo</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>$router<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>name<span class="token punctuation">:</span> <span class="token string">'items'</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token comment" spellcheck="true">// 変更なし</span>
+  <span class="token punctuation">}</span>
+</span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre>
+</div>
+</section>
+<p><code>store</code>をインポートして、<code>this.emit('add')</code>を<code>store.actions.addMemo()</code>に置き換えています。</p>
+<ul>
+<li>変更後の<a href="https://github.com/codegrid/2016-vuejs/blob/master/8/store/src/page/Add.vue" target="_blank">src/page/Add.vue</a></li>
+</ul>
+<p>Storeへの置き換えは以上になります。</p>
+<h2 id="-">アプリケーションを実行する</h2>
+<p>Storeへの置き換えが完了したので、アプリケーションを実行してみましょう。完成したアプリケーションのコードは、以下にあります。</p>
+<ul>
+<li><a href="https://github.com/codegrid/2016-vuejs/blob/master/8/store/" target="_blank">Storeへの書き換えをしたメモアプリケーション</a></li>
+</ul>
+<p>アプリケーションを実行して、メモの追加や削除を実行すると、開発者ツールのコンソールに変更のログが出力されているのが確認できます。</p>
+<figure class="ImgBox">
+<h1 id="store-">Storeへ書き換えたメモアプリケーション</h1>
+<p><img src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/8_app.png" alt=""></p>
+
+</figure>
+<h2 id="-">おわりに</h2>
+<p>今回はアプリケーションの状態管理をStoreパターンで置き換えました。規模の大きくないアプリケーションであれば、今回実装したような単純なStoreパターンでも十分に機能しますが、もっとしっかりとしたアプリケーションを構築するためには、状態管理のためのライブラリを導入することが求められます。</p>
+<p>Vue.jsはReduxやfacebook/fluxのようなライブラリを使って状態管理を行うことが可能ですが、<a href="https://github.com/vuejs/vuex" target="_blank">Vuex</a>というVue.js専用の状態管理ライブラリがあります。Vuexを使えばVue.jsにスムーズに状態管理の仕組みを組み込むことができます。</p>
+<p>次回はこのVuexを紹介します。</p>
+</article></div><div class="CG2-narrowLayout__sub"><div class="CG2-articleSeriesNav"><div class="CG2-articleSeriesNav__inner"><ul><li><a href="https://app.codegrid.net/entry/2016-vue-1">第１回「Vue.jsとは」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-2">第２回「使用頻度の高い基礎機能」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-3">第３回「コンポーネントの作成と連携」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-4">第４回「vue-loaderを使ったコンポーネント開発」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-5">第５回「vue-routerでルーティングを行う」</a></li></ul><ul><li><a href="https://app.codegrid.net/entry/2016-vue-6">第６回「使いやすい編集ページの実装」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-7">第７回「アプリケーションの状態管理」</a></li><li class="CG2-articleSeriesNav__item--current"><a href="https://app.codegrid.net/entry/2016-vue-8">第８回「Storeパターンの適用」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-9">第９回「Vuexで状態管理をする」</a></li></ul></div></div></div><div class="CG2-narrowLayout__main"><div class="CG2-articlePagination"><ul><li class="CG2-articlePagination__prev"><a href="https://app.codegrid.net/entry/2016-vue-7">第7回 アプリケーションの状態管理</a></li><li class="CG2-articlePagination__next"><a href="https://app.codegrid.net/entry/2016-vue-9">第9回 Vuexで状態管理をする</a></li></ul></div><div class="CG2-articleUtil"><div class="CG2-articleUtil__socialItems"><div class="CG2-articleUtil__socialItem CG2-articleUtil__socialItem--twitter"><iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" title="Twitter Tweet Button" src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/tweet_button.9384f3649360e38a7002082a80b92414.en.html" style="position: static; visibility: visible; width: 61px; height: 20px;" data-url="https://app.codegrid.net/entry/2016-vue-8"></iframe></div><div class="CG2-articleUtil__socialItem CG2-articleUtil__socialItem--facebook"><iframe src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/like.html" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:68px;" allowtransparency="true"></iframe></div></div><script src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/widgets.js" async=""></script></div><div class="CG2-profileSimple"><div class="CG2-profileSimple__image"><img src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/5713bf32ecfacfc3b921151a453cc18e(1)" alt="中島 直博" width="120" height="120"></div><div class="CG2-profileSimple__main"><div class="CG2-profileSimple__header"><div class="CG2-profileSimple__name">中島 直博</div><div class="CG2-profileSimple__title">フロントエンド・エンジニア</div></div><div class="CG2-profileSimple__text"><p></p><p>JavaScriptとCSSへの興味から大学院を中退してWebの世界に飛び込む。大手デジタルコンテンツベンダーにてHTML、CSS、JavaScriptなどフロントエンド全般の担当として、主にスマートフォン向けゲームの開発に従事。2014年1月にフロントエンド・エンジニアとして株式会社ピクセルグリッドへ入社。スマートフォンサイトの実装を得意とする。
+また、在学中から<a href="http://html5j.org/" target="_blank">html5j</a>のスタッフとして、さまざまな技術系勉強会の運営に関わり、<a href="http://html5experts.jp/" target="_blank">HTML5 Experts.jp</a>のコントリビューターもつとめる。</p>
+<p></p></div></div></div></div></div><footer class="CG2-pageFooter"><div class="CG2-pageFooter__inner"><div class="CG2-pageFooter__wwwNav"><div class="CG2-pageFooter__logo"><img src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/logo.svg" alt="CodeGrid" width="125" height="24"></div><ul><li><a href="https://www.codegrid.net/" target="_blank">CodeGridについて</a></li><li><a href="https://www.codegrid.net/payment.html" target="_blank">料金</a></li><li><a href="https://www.codegrid.net/organization.html" target="_blank">団体購読</a></li><li><a href="https://www.codegrid.net/faq.html" target="_blank">よくある質問</a></li><li><a href="https://www.codegrid.net/publication.html" target="_blank">書籍</a></li></ul></div><div class="CG2-pageFooter__appNav"><div class="CG2-pageFooter__appNavHeader"><div class="CG2-pageFooter__appNavHeading"><a href="https://app.codegrid.net/">アプリトップ</a></div><div class="CG2-pageFooter__appNavSearch"><div class="CG2-pageFooter__appNavSearchInner"><form action="https://app.codegrid.net/search" method="get"><input type="search" name="q" value=""></form></div></div></div><div class="CG2-pageFooter__appNavList"><ul><li><a href="https://app.codegrid.net/latest">最新記事一覧</a></li><li><a href="https://app.codegrid.net/expose">無料公開記事一覧</a></li><li><a href="https://app.codegrid.net/author">著者一覧</a></li><li><a href="https://app.codegrid.net/favorites">お気に入り一覧</a></li><li><a href="https://app.codegrid.net/popular">人気記事一覧</a></li></ul></div><div class="CG2-pageFooter__appNavCategory"><ul><li><a href="https://app.codegrid.net/category/architecture"><span class="CG2-icon-cat-architecture"></span>設計</a></li><li><a href="https://app.codegrid.net/category/future"><span class="CG2-icon-cat-future"></span>未来・次世代</a></li><li><a href="https://app.codegrid.net/category/talk"><span class="CG2-icon-cat-talk"></span>座談会</a></li><li><a href="https://app.codegrid.net/category/mastering"><span class="CG2-icon-cat-mastering"></span>実践</a></li><li><a href="https://app.codegrid.net/category/elementary"><span class="CG2-icon-cat-elementary"></span>入門</a></li><li><a href="https://app.codegrid.net/category/standards"><span class="CG2-icon-cat-standards"></span>仕様解説</a></li><li><a href="https://app.codegrid.net/category/work-style"><span class="CG2-icon-cat-work-style"></span>仕事術</a></li><li><a href="https://app.codegrid.net/category/report"><span class="CG2-icon-cat-report"></span>レポート</a></li><li><a href="https://app.codegrid.net/category/design"><span class="CG2-icon-cat-design"></span>デザイン</a></li><li><a href="https://app.codegrid.net/category/discussion"><span class="CG2-icon-cat-discussion"></span>ディスカッション</a></li><li><a href="https://app.codegrid.net/category/interview"><span class="CG2-icon-cat-interview"></span>インタビュー</a></li><li><a href="https://app.codegrid.net/category/survey"><span class="CG2-icon-cat-survey"></span>アンケート</a></li></ul></div></div><div class="CG2-pageFooter__legalNav"><ul><li><a href="https://twitter.com/codegrid" target="_blank">公式Twitter</a></li><li><a href="https://www.codegrid.net/contact.html" target="_blank">お問い合わせ</a></li><li><a href="https://www.codegrid.net/terms.html" target="_blank">利用規約</a></li><li><a href="https://www.codegrid.net/privacy.html" target="_blank">プライバシーポリシー</a></li><li><a href="https://www.codegrid.net/tokutei.html" target="_blank">特定商取引法に基づく表示</a></li></ul><div class="CG2-pageFooter__company"><a href="https://www.pxgrid.com/" target="_blank">運営会社<img src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/pxg-logo.svg" alt="Pixel Grid" width="128" height="32"></a></div></div></div></footer><script src="./8これから始めるVue.js 2.0 - Storeパターンの適用 _ CodeGrid_files/build.js"></script></body></html>

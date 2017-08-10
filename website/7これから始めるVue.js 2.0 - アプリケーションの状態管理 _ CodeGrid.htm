@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)https://app.codegrid.net/entry/2016-vue-7 -->
+<html lang="ja" data-env="prod" data-runapp=""><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>これから始めるVue.js 2.0 - アプリケーションの状態管理 | CodeGrid</title><meta property="og:type" content="article"><meta property="og:title" content="これから始めるVue.js 2.0 - アプリケーションの状態管理 | CodeGrid"><meta name="description" content="状態が複数の箇所から変更できるような設計では、次第にデータの流れが把握しにくくなります。解決のための状態管理の方法として、Storeパターンを解説します。"><meta property="og:description" content="状態が複数の箇所から変更できるような設計では、次第にデータの流れが把握しにくくなります。解決のための状態管理の方法として、Storeパターンを解説します。"><meta property="og:locale" content="ja_JP"><meta property="og:site_name" content="CodeGrid"><meta property="og:image" content="https://app.codegrid.net/img/ogp_1024.png"><meta property="og:email" content="codegrid@pxgrid.com"><meta property="twitter:card" content="summary"><meta property="twitter:site" content="@CodeGrid"><meta name="csrfToken" content="d5413f335ba3e732001a9b5ab8590ce83b5c5c77"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="application-name" content="CodeGrid"><link rel="shortcut icon" href="https://app.codegrid.net/favicon.ico"><link rel="apple-touch-icon" href="https://app.codegrid.net/icon.png"><link rel="apple-touch-icon-precomposed" href="https://app.codegrid.net/icon.png"><link rel="shortcut icon" href="https://app.codegrid.net/icon.png"><link rel="icon" href="https://app.codegrid.net/icon.png"><link rel="stylesheet" href="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/codegrid-ui.min.css"><script async="" src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/analytics.js"></script><script src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/codegrid-ui.min.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-25599414-2', 'auto');
+ga('send', 'pageview');</script><link rel="stylesheet" href="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/build.css"><script type="text/javascript" charset="utf-8" async="" src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/button.c794c32aa66923d37742ceab3914757c.js"></script><style id="style-1-cropbar-clipper">/* Copyright 2014 Evernote Corporation. All rights reserved. */
+.en-markup-crop-options {
+    top: 18px !important;
+    left: 50% !important;
+    margin-left: -100px !important;
+    width: 200px !important;
+    border: 2px rgba(255,255,255,.38) solid !important;
+    border-radius: 4px !important;
+}
+
+.en-markup-crop-options div div:first-of-type {
+    margin-left: 0px !important;
+}
+</style></head><body><div class="CG2-pageHeaderPlacer"><header id="js-page-header" class="CG2-pageHeader"><div class="CG2-pageHeader__inner"><div class="CG2-pageHeader__logo"><a href="https://app.codegrid.net/"><img src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/logo.svg" alt="CodeGrid" width="125" height="24"></a></div><div class="CG2-pageHeader__appNav"><ul><li><a href="https://app.codegrid.net/latest">最新記事一覧</a></li><li><a href="https://app.codegrid.net/favorites">お気に入り一覧</a></li></ul></div><div class="CG2-pageHeader__search"><div class="CG2-pageHeader__searchInner"><form action="https://app.codegrid.net/search" method="get"><input type="search" name="q" value=""></form></div></div><div class="CG2-pageHeader__user"><div class="CG2-pageHeader__userHeader"><div class="CG2-pageHeader__userName">devfrontall@gmail.com</div><div class="CG2-pageHeader__userAvatar"><img src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/photo.jpg" alt="" width="56" height="56"></div><div class="CG2-pageHeader__userOpener"></div></div><div class="CG2-pageHeader__userMenu"><div class="CG2-pageHeader__userMenuInner"><ul><li><a href="https://app.codegrid.net/setting" class="CG2-button CG2-button--fullWidth CG2--alignCenter">設定</a></li><li><a href="https://app.codegrid.net/signout" class="CG2-button CG2-button--fullWidth CG2--alignCenter">ログアウト</a></li></ul></div></div></div></div><div data-drawer-toggle="" class="CG2-pageHeader__opener"></div></header></div><div class="CG2-drawer"><div class="CG2-drawer__panel"><div class="CG2-drawer__panelViewport"><div class="CG2-drawer__panelBody"><div class="CG2-drawerBody"><div class="CG2-drawerBody__user"><div class="CG2-drawerBody__userAvatar"><img src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/photo.jpg" alt="" width="56" height="56"></div><div class="CG2-drawerBody__userName">devfrontall@gmail.com</div></div><div class="CG2-drawerBody__nav"><ul><li><a href="https://app.codegrid.net/">アプリトップ</a></li><li><a href="https://app.codegrid.net/latest">最新記事一覧</a></li><li><a href="https://app.codegrid.net/expose">無料公開記事一覧</a></li><li><a href="https://app.codegrid.net/author">著者一覧</a></li><li><a href="https://app.codegrid.net/favorites">お気に入り一覧</a></li><li><a href="https://app.codegrid.net/popular">人気記事一覧</a></li></ul></div><div class="CG2-drawerBody__userNav"><ul><li><a href="https://app.codegrid.net/setting" class="CG2-button CG2-button--fullWidth">設定</a></li></ul></div><div class="CG2-drawerBody__separator"></div><div class="CG2-drawerBody__search"><div class="CG2-drawerBody__searchInner"><form action="https://app.codegrid.net/search" method="get"><input type="search" name="q" value=""></form></div></div><div class="CG2-drawerBody__nav"><ul><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/architecture"><span class="CG2-icon-cat-architecture"></span>設計</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/future"><span class="CG2-icon-cat-future"></span>未来・次世代</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/talk"><span class="CG2-icon-cat-talk"></span>座談会</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/mastering"><span class="CG2-icon-cat-mastering"></span>実践</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/elementary"><span class="CG2-icon-cat-elementary"></span>入門</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/standards"><span class="CG2-icon-cat-standards"></span>仕様解説</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/work-style"><span class="CG2-icon-cat-work-style"></span>仕事術</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/report"><span class="CG2-icon-cat-report"></span>レポート</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/design"><span class="CG2-icon-cat-design"></span>デザイン</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/discussion"><span class="CG2-icon-cat-discussion"></span>ディスカッション</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/interview"><span class="CG2-icon-cat-interview"></span>インタビュー</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://app.codegrid.net/category/survey"><span class="CG2-icon-cat-survey"></span>アンケート</a></li></ul></div><div class="CG2-drawerBody__separator"></div><div class="CG2-drawerBody__nav"><ul><li><a href="https://www.codegrid.net/" target="_blank">CodeGridについて</a></li><li><a href="https://www.codegrid.net/payment.html" target="_blank">料金</a></li><li><a href="https://www.codegrid.net/organization.html" target="_blank">団体購読</a></li><li><a href="https://www.codegrid.net/faq.html" target="_blank">よくある質問</a></li><li><a href="https://www.codegrid.net/publication.html" target="_blank">書籍</a></li><li class="CG2-drawerBody__navItem--icon"><a href="https://twitter.com/codegrid" target="_blank"><span class="CG2-icon-twitter"></span>公式Twitter</a></li></ul></div><div class="CG2-drawerBody__separator"></div><div class="CG2-drawerBody__nav"><ul><li class="CG2-drawerBody__navItem--plane"><a href="https://www.codegrid.net/contact.html" target="_blank">お問い合わせ</a></li><li class="CG2-drawerBody__navItem--plane"><a href="https://www.codegrid.net/terms.html" target="_blank">利用規約</a></li><li class="CG2-drawerBody__navItem--plane"><a href="https://www.codegrid.net/privacy.html" target="_blank">プライバシーポリシー</a></li><li class="CG2-drawerBody__navItem--plane"><a href="https://www.codegrid.net/tokutei.html" target="_blank">特定商取引法に基づく表示</a></li></ul></div></div></div></div><div data-drawer-hide="" class="CG2-drawer__panelLeft"></div></div><div data-drawer-close="" class="CG2-drawer__bg"></div></div><div data-page-id="entry-main" class="CG2-articleHeader"><div class="CG2-articleHeader__inner"><div class="CG2-articleHeader__category"><div class="CG2-articleHeader__categoryIcon"><span class="CG2-icon-cat-mastering"></span></div><div class="CG2-articleHeader__categoryName">実践</div></div><div class="CG2-articleHeader__main"><div class="CG2-articleHeader__mainInner"><div class="CG2-articleHeader__series">これから始めるVue.js 2.0</div><div class="CG2-articleHeader__title">第7回 アプリケーションの状態管理</div><div class="CG2-articleHeader__abstract"><p>状態が複数の箇所から変更できるような設計では、次第にデータの流れが把握しにくくなります。解決のための状態管理の方法として、Storeパターンを解説します。</p></div><div class="CG2-articleHeader__pubDate">2017年01月05日発行</div><div class="CG2-articleHeader__authors"><div class="CG2-articleHeader__author"><a href="https://app.codegrid.net/author/nakajmg"><div class="CG2-articleHeader__authorImage"><img src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/5713bf32ecfacfc3b921151a453cc18e" alt="中島 直博"></div><div class="CG2-articleHeader__authorName">中島 直博</div><div class="CG2-articleHeader__authorTitle">フロントエンド・エンジニア</div></a></div></div></div></div><div class="CG2-articleHeader__pagenation"><ul><li class="CG2-articleHeader__pagenationPrev"><a href="https://app.codegrid.net/entry/2016-vue-6">前回</a></li><li class="CG2-articleHeader__pagenationNext"><a href="https://app.codegrid.net/entry/2016-vue-8">次回</a></li></ul></div><div class="CG2-articleHeader__utils"><ul><li><a href="https://app.codegrid.net/series/2016-vue" class="CG2-transparentButton"><span class="CG2-icon-list"></span>このシリーズの記事一覧をみる</a></li><li><button id="js-toggle-fav-series" type="button" data-id="580dadd53504b70f00c2c70c" aria-pressed="false" class="CG2-transparentButton"><span aria-hidden="true" class="CG2-icon-star"></span><span class="CG2-transparentButton__favText">このシリーズをお気に入りに登録</span></button></li><li><button id="js-unread" data-id="5857955567adbf0004e032d1" class="CG2-transparentButton">未読にする</button></li></ul></div></div><div style="background-image: url(//cdn.codegrid.net/2016-vue/main-blur.jpg)" class="CG2-articleHeader__bg"></div></div><div class="CG2-narrowLayout"><div class="CG2-narrowLayout__main"><section class="CG2-articleTOC"><header class="CG2-articleTOC__header"><h1>目次</h1></header><div class="CG2-articleTOC__body"><div class="CG2-articleTOC__list"><ul><li><a href="https://app.codegrid.net/entry/2016-vue-7#toc-0">Vue.jsと状態管理</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-7#toc-1">なぜ状態管理が重要なのか</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-7#toc-2">破綻しやすい状態管理の例</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-7#toc-3">状態の変更方法とデータの流れに制約を加える</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-7#toc-4">Storeパターンとは</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-7#toc-5">おわりに</a></li></ul></div></div></section><article id="js-entry-article" class="CG2-article"><p>前回までで、メモアプリケーションの機能の実装は完了しました。今回は、アプリケーションの状態（State）の管理について、実装を混じえながら解説していきます。</p>
+<h2 id="vue-js-">Vue.jsと状態管理</h2>
+<p>まず、Vue.jsにおける状態（State）とは、何かを明らかにしておきましょう。Vue.jsの状態とは、Vueインスタンスの<code>data</code>オブジェクトのことを指します。</p>
+<p>前回作ったメモアプリケーションでいうと、<code>App</code>は<code>data</code>オブジェクトにメモのコレクションの配列として<code>memos</code>という状態を持っていました。</p>
+<ul>
+<li><a href="https://github.com/codegrid/2016-vuejs/blob/master/6/memo/src/App.vue" target="_blank">2016-vuejs/6/memo/src/App.vue</a></li>
+</ul>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">App.vue</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-javascript"><code class=" language-javascript">  <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+      memos<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+        <span class="token operator">...</span>
+      <span class="token punctuation">]</span>
+    <span class="token punctuation">}</span>
+</code></pre>
+</div>
+</section>
+<p>また、<code>EditorView</code>はユーザーからの入力を保持するための<code>input</code>という状態を持っていました。</p>
+<ul>
+<li><a href="https://github.com/codegrid/2016-vuejs/blob/master/6/memo/src/components/EditorView.vue" target="_blank">2016-vuejs/6/memo/src/components/EditorView.vue</a></li>
+</ul>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">EditorView.vue</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-javascript"><code class=" language-javascript">    <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token punctuation">{</span>
+        input<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+          text<span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+          date<span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+          tags<span class="token punctuation">:</span> <span class="token string">''</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+</code></pre>
+</div>
+</section>
+<p>これらの状態は、必ずしもVueインスタンスやコンポーネントが持っている必要はなく、状態をどう扱うかはアプリケーションの作成者に委ねられています。</p>
+<h2 id="-">なぜ状態管理が重要なのか</h2>
+<p>前回作ったような、小規模なアプリケーションであれば、どこでデータの更新が行われているか把握することは簡単です。コンポーネント同士が密なやり取りをしていたとしても、特に大きな問題となるようなこともありません。アプリケーションでエラーが起こったときも、どこに問題があるかを調査するのに、それほど時間はかからないでしょう。</p>
+<p>しかし、アプリケーションの規模が大きくなるにつれて、データの更新を行っている箇所が増え、各コンポーネントが好き勝手にアプリケーションの状態を変更していくと、次第にアプリケーション全体のデータの流れを把握することが困難になります。</p>
+<p>変更に強いアプリケーションを作るためには、変更に耐えられる状態管理を行う必要があります。</p>
+<h2 id="-">破綻しやすい状態管理の例</h2>
+<p>まず、Vue.jsのアプリケーションにおいて、破綻しやすい状態管理の例を見てみましょう。</p>
+<p>Vue.jsは単一の状態を、複数のVueインスタンスで共有することができます。たとえば、次のようにすることで、異なるVueインスタンスで同一のデータを参照することができます。</p>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">app.js</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">const</span> dataSource <span class="token operator">=</span> <span class="token punctuation">{</span>
+  message<span class="token punctuation">:</span> <span class="token string">'Hello Vue.js!!'</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">const</span> vm1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vue</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  el<span class="token punctuation">:</span> <span class="token string">'#vm1'</span><span class="token punctuation">,</span>
+  template<span class="token punctuation">:</span> <span class="token template-string"><span class="token string">`
+    &lt;div&gt; 
+      &lt;input v-model="message"&gt;
+    &lt;/div&gt;
+  `</span></span><span class="token punctuation">,</span>
+  <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> dataSource
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> vm2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vue</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  el<span class="token punctuation">:</span> <span class="token string">'#vm2'</span><span class="token punctuation">,</span>
+  template<span class="token punctuation">:</span> <span class="token template-string"><span class="token string">`
+    &lt;div&gt;
+      &lt;p&gt;{{message}}&lt;/p&gt;
+      &lt;button @click="clear"&gt;clear&lt;/button&gt;
+    &lt;/div&gt;
+  `</span></span><span class="token punctuation">,</span>
+  <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> dataSource
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  methods<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    <span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>message <span class="token operator">=</span> <span class="token string">''</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+document<span class="token punctuation">.</span><span class="token function">querySelector</span><span class="token punctuation">(</span><span class="token string">'#button'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  dataSource<span class="token punctuation">.</span>message <span class="token operator">+</span><span class="token operator">=</span> <span class="token string">'button clicked!!'</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+</div>
+</section>
+<p><code>vm1</code>と<code>vm2</code>は、<code>data</code>オブジェクトで<code>dataSource</code>という単一のデータを共有します。次のデモでテキストボックスの編集と、'clear'ボタンと'change'ボタンをそれぞれクリックしてみてください。</p>
+<section class="CG2-livecode"><header class="CG2-livecode__header"><div class="CG2-livecode__label">データを共有する</div><div class="CG2-livecode__nav"><ul><li><a href="https://github.com/codegrid/2016-vuejs/blob/master/7/data" target="_blank">ソースコード</a></li><li><a href="https://cdn.codegrid.net/2016-vue/demo/7/data/index.html" target="_blank">新規タブで開く</a></li></ul></div></header><div class="CG2-livecode__body"><iframe src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/index.html"></iframe></div></section>
+<p><code>vm1</code>のテキストボックスの値を変更すると、<code>vm2</code>の<code>message</code>も更新されます。'clear'ボタンをクリックするとテキストボックスの文字列もクリアされます。また、'change'ボタンをクリックすると<code>'button clicked'</code>という文字列を<code>message</code>に追加しますが、このようなVueのインスタンスと無関係な場所からの変更でも再レンダリングが行われます。</p>
+<p>このデモはデータを一箇所で管理できていて、どこからデータを更新したかに関わらず、データの変更によってリアクティブにレンダリングが行われています。一見すると簡単で便利に思えるかもしれません。ですがこれは筋の悪い方法です。</p>
+<figure class="ImgBox">
+<h1 id="-">破綻しやすいデータフロー</h1>
+<p><img src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/7_fragile.png" alt="破綻しやすいデータフローの図"></p>
+
+</figure>
+<p>この方法がなぜ破綻しやすいかというと、ユーザーの入力と状態の更新がまとめて行われているからです。また、状態を更新できる箇所が複数あることも好ましくありません。アプリケーションに機能追加などを行っていくと、どこからどういったデータの更新が行われるか、次第に予測することも把握することもできなくなり、機能の追加だけでなく、デバッグさえも難しいものにするでしょう。</p>
+<h2 id="-">状態の変更方法とデータの流れに制約を加える</h2>
+<p>前述した破綻しやすい例では、状態の変更に何も制限がなかったため、それぞれが自由に状態を更新し、データがどこから更新されてどこに影響を与えるかがわからなくなります。アプリケーションが大きくなっていくと、すぐにデータの流れが複雑になり、メンテンナンスが難しくなります。</p>
+<p>ではデータの変更が追えて、データの流れが複雑にならないようにするにはどうするか、その答えの一つが中央集権的な状態管理です。そしてただ中央で状態を管理するのではなく、状態の変更とデータの流れに制約を与えることで、変更に強い状態管理を実現します。</p>
+<h2 id="store-">Storeパターンとは</h2>
+<p>中央集権的な状態管理のパターンは、Storeパターンと呼ばれることが多いです。Storeパターンの単純な例を見てみましょう。今回は次のような制約をもとに実装を行います。</p>
+<ul>
+<li>状態は単一のStoreで管理する</li>
+<li>状態はActionによってのみ変更される</li>
+</ul>
+<p>この制約によって、自然とデータの流れを一方向に制約することになります。</p>
+<figure class="ImgBox">
+<h1 id="store-">Storeパターン</h1>
+<p><img src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/7_store.png" alt="Storeパターンの図"></p>
+
+</figure>
+<p>次のコードは、単純なStoreの実装です。すべての状態は<code>state</code>に格納されます。<code>xxxxAction</code>という名前の関数がActionにあたります。これらのActionによってのみ、状態の変更を行うようにします。</p>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">store.js</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-javascript"><code class=" language-javascript"><span class="token keyword">const</span> store <span class="token operator">=</span> <span class="token punctuation">{</span>
+  debug<span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  state<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    message<span class="token punctuation">:</span> <span class="token string">'Hello Vue.js!!'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">setMessageAction</span><span class="token punctuation">(</span>newValue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>debug <span class="token operator">&amp;&amp;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`setMessageAction triggered with </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>newValue<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">`</span></span><span class="token punctuation">)</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">.</span>message <span class="token operator">=</span> newValue
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token function">clearMessageAction</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>debug <span class="token operator">&amp;&amp;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'clearMessageAction triggered'</span><span class="token punctuation">)</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>state<span class="token punctuation">.</span>message <span class="token operator">=</span> <span class="token string">''</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</div>
+</section>
+<p>ここでは<code>debug</code>が<code>true</code>の場合に、Actionが呼ばれたことをコンソールにログとして出すようにしています。</p>
+<p>このStoreを、アプリケーションから参照するようにします。</p>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">app.js</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-javascript"><code class=" language-javascript"><span class="token comment" spellcheck="true">// store.js はscriptタグで読み込まれている状態</span>
+<span class="token keyword">const</span> vm1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vue</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  el<span class="token punctuation">:</span> <span class="token string">'#vm1'</span><span class="token punctuation">,</span>
+  template<span class="token punctuation">:</span> <span class="token template-string"><span class="token string">`
+    &lt;div&gt; 
+      &lt;input :value="sharedState.message" @input="updateMessage"&gt;
+    &lt;/div&gt;
+  `</span></span><span class="token punctuation">,</span>
+  <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+      sharedState<span class="token punctuation">:</span> store<span class="token punctuation">.</span>state
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  methods<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    <span class="token function">updateMessage</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      store<span class="token punctuation">.</span><span class="token function">setMessageAction</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>value<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> vm2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vue</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  el<span class="token punctuation">:</span> <span class="token string">'#vm2'</span><span class="token punctuation">,</span>
+  template<span class="token punctuation">:</span> <span class="token template-string"><span class="token string">`
+    &lt;div&gt;
+      &lt;p&gt;{{sharedState.message}}&lt;/p&gt;
+      &lt;button @click="clear"&gt;clear&lt;/button&gt;
+    &lt;/div&gt;
+  `</span></span><span class="token punctuation">,</span>
+  <span class="token function">data</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+      sharedState<span class="token punctuation">:</span> store<span class="token punctuation">.</span>state
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  methods<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    <span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      store<span class="token punctuation">.</span><span class="token function">clearMessageAction</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+</div>
+</section>
+<p><code>store.state</code>への参照は<code>sharedState</code>といった名前を付けておくことで、これがアプリケーション全体で共有する状態だということがわかるようにしておきます。<code>sharedState</code>は参照専用として、直接変更を行わないようにします。<code>sharedState</code>に変更を加える場合には、必ずActionを実行して変更します。コンポーネント固有の状態がある場合には、<code>privateState</code>といった名前を付けておくことで、状態を区別することができます。</p>
+<p>実際の動作は次のようになります。</p>
+<section class="CG2-livecode"><header class="CG2-livecode__header"><div class="CG2-livecode__label">Storeパターンの適用</div><div class="CG2-livecode__nav"><ul><li><a href="https://github.com/codegrid/2016-vuejs/blob/master/7/store" target="_blank">ソースコード</a></li><li><a href="https://cdn.codegrid.net/2016-vue/demo/7/store/index.html" target="_blank">新規タブで開く</a></li></ul></div></header><div class="CG2-livecode__body"><iframe src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/index(1).html"></iframe></div></section>
+<h3 id="v-model-">v-modelへの対処</h3>
+<p>Storeパターンを適用するにあたっては、ポイントがあります。</p>
+<p>破綻しやすい例で<code>&lt;input v-model="message"&gt;</code>としていた箇所は、<code>v-model</code>ディレクティブを通して<code>message</code>を直接変更していました。これを<code>&lt;input v-model="sharedState.message"&gt;</code>としてしまうと、"<strong>状態はActionによってのみ変更される</strong>"という制約を破ることになってしまいます。</p>
+<p>これを避けるために、前述した例では<code>:value</code>に値をバインドし、<code>'input'</code>イベントが起こるたびに<code>setMessageAction</code>を呼ぶように変更しています。</p>
+<section class="CG2-livecode">
+<header class="CG2-livecode__header">
+<div class="CG2-livecode__label">app.js（抜粋）</div>
+</header>
+<div class="CG2-livecode__body"><pre class=" language-javascript"><code class=" language-javascript"><span class="token operator">...</span>
+template<span class="token punctuation">:</span> <span class="token template-string"><span class="token string">`
+  &lt;div&gt; 
+    &lt;input :value="sharedState.message" @input="updateMessage"&gt;
+  &lt;/div&gt;
+`</span></span><span class="token punctuation">,</span>
+<span class="token operator">...</span>
+methods<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+  <span class="token function">updateMessage</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    store<span class="token punctuation">.</span><span class="token function">setMessageAction</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span>target<span class="token punctuation">.</span>value<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+<span class="token operator">...</span>
+</code></pre>
+</div>
+</section>
+<h3 id="store-">Storeパターンの効能</h3>
+<p>この単純なStoreパターンでは、Storeを見ればアプリケーションにどういった状態が存在しているかを、すぐに把握できます。また、同じように状態の変更を行う関数も一箇所に集約されているので、後からプロジェクトに参加した人でも、すぐに全体を把握できるでしょう。先に決めておいた制約の共有がしっかりできれば、人によって状態変更のやり方がバラバラになる、といったことも避けられます。</p>
+<p>ただし、この単純なStoreパターンが有効なのは、規模の小さなアプリケーションまでです。管理する状態が増えるほど、状態の変更を行う関数も増え、全体を把握するのが難しくなっていきます。規模に合わせて状態とActionを、ファイルとして分割できるような仕組みやプロセスの導入が必要になるでしょう。</p>
+<p>Vue.jsは規模に合わせて、段階的にスケールする仕組みをライブラリとツールで実現できます。</p>
+<div class="Column">
+<h1 id="-">【コラム】フロントエンドの設計</h1>
+<p>Storeパターンなどがフォーカスされてきた背景としては、近年のWebアプリケーションにおいて、フロントエンドに求められる部分が大きくなったことがあります。特に、UIがリッチになったことでUI操作によるイベントが頻発するようになり、今まで用いられていたMVCやMVVMといった設計がマッチしないケースが出てきました。このようなイベントをうまく処理するための設計として、Facebookが提唱した<a href="https://github.com/facebook/flux" target="_blank">facebook/Flux</a>のような状態管理のパターンも注目を集めています。</p>
+
+</div>
+<h2 id="-">おわりに</h2>
+<p>今回は状態管理が破綻しやすい例と、中央集権的な状態管理の方法であるStoreパターンについて解説しました。次回は、メモアプリケーションに、実際にStoreパターンを適用していきます。</p>
+</article></div><div class="CG2-narrowLayout__sub"><div class="CG2-articleSeriesNav"><div class="CG2-articleSeriesNav__inner"><ul><li><a href="https://app.codegrid.net/entry/2016-vue-1">第１回「Vue.jsとは」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-2">第２回「使用頻度の高い基礎機能」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-3">第３回「コンポーネントの作成と連携」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-4">第４回「vue-loaderを使ったコンポーネント開発」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-5">第５回「vue-routerでルーティングを行う」</a></li></ul><ul><li><a href="https://app.codegrid.net/entry/2016-vue-6">第６回「使いやすい編集ページの実装」</a></li><li class="CG2-articleSeriesNav__item--current"><a href="https://app.codegrid.net/entry/2016-vue-7">第７回「アプリケーションの状態管理」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-8">第８回「Storeパターンの適用」</a></li><li><a href="https://app.codegrid.net/entry/2016-vue-9">第９回「Vuexで状態管理をする」</a></li></ul></div></div></div><div class="CG2-narrowLayout__main"><div class="CG2-articlePagination"><ul><li class="CG2-articlePagination__prev"><a href="https://app.codegrid.net/entry/2016-vue-6">第6回 使いやすい編集ページの実装</a></li><li class="CG2-articlePagination__next"><a href="https://app.codegrid.net/entry/2016-vue-8">第8回 Storeパターンの適用</a></li></ul></div><div class="CG2-articleUtil"><div class="CG2-articleUtil__socialItems"><div class="CG2-articleUtil__socialItem CG2-articleUtil__socialItem--twitter"><iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" title="Twitter Tweet Button" src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/tweet_button.9384f3649360e38a7002082a80b92414.en.html" style="position: static; visibility: visible; width: 61px; height: 20px;" data-url="https://app.codegrid.net/entry/2016-vue-7"></iframe></div><div class="CG2-articleUtil__socialItem CG2-articleUtil__socialItem--facebook"><iframe src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/like.html" scrolling="no" frameborder="0" style="border:none; overflow:hidden; height:68px;" allowtransparency="true"></iframe></div></div><script src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/widgets.js" async=""></script></div><div class="CG2-profileSimple"><div class="CG2-profileSimple__image"><img src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/5713bf32ecfacfc3b921151a453cc18e(1)" alt="中島 直博" width="120" height="120"></div><div class="CG2-profileSimple__main"><div class="CG2-profileSimple__header"><div class="CG2-profileSimple__name">中島 直博</div><div class="CG2-profileSimple__title">フロントエンド・エンジニア</div></div><div class="CG2-profileSimple__text"><p></p><p>JavaScriptとCSSへの興味から大学院を中退してWebの世界に飛び込む。大手デジタルコンテンツベンダーにてHTML、CSS、JavaScriptなどフロントエンド全般の担当として、主にスマートフォン向けゲームの開発に従事。2014年1月にフロントエンド・エンジニアとして株式会社ピクセルグリッドへ入社。スマートフォンサイトの実装を得意とする。
+また、在学中から<a href="http://html5j.org/" target="_blank">html5j</a>のスタッフとして、さまざまな技術系勉強会の運営に関わり、<a href="http://html5experts.jp/" target="_blank">HTML5 Experts.jp</a>のコントリビューターもつとめる。</p>
+<p></p></div></div></div></div></div><footer class="CG2-pageFooter"><div class="CG2-pageFooter__inner"><div class="CG2-pageFooter__wwwNav"><div class="CG2-pageFooter__logo"><img src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/logo.svg" alt="CodeGrid" width="125" height="24"></div><ul><li><a href="https://www.codegrid.net/" target="_blank">CodeGridについて</a></li><li><a href="https://www.codegrid.net/payment.html" target="_blank">料金</a></li><li><a href="https://www.codegrid.net/organization.html" target="_blank">団体購読</a></li><li><a href="https://www.codegrid.net/faq.html" target="_blank">よくある質問</a></li><li><a href="https://www.codegrid.net/publication.html" target="_blank">書籍</a></li></ul></div><div class="CG2-pageFooter__appNav"><div class="CG2-pageFooter__appNavHeader"><div class="CG2-pageFooter__appNavHeading"><a href="https://app.codegrid.net/">アプリトップ</a></div><div class="CG2-pageFooter__appNavSearch"><div class="CG2-pageFooter__appNavSearchInner"><form action="https://app.codegrid.net/search" method="get"><input type="search" name="q" value=""></form></div></div></div><div class="CG2-pageFooter__appNavList"><ul><li><a href="https://app.codegrid.net/latest">最新記事一覧</a></li><li><a href="https://app.codegrid.net/expose">無料公開記事一覧</a></li><li><a href="https://app.codegrid.net/author">著者一覧</a></li><li><a href="https://app.codegrid.net/favorites">お気に入り一覧</a></li><li><a href="https://app.codegrid.net/popular">人気記事一覧</a></li></ul></div><div class="CG2-pageFooter__appNavCategory"><ul><li><a href="https://app.codegrid.net/category/architecture"><span class="CG2-icon-cat-architecture"></span>設計</a></li><li><a href="https://app.codegrid.net/category/future"><span class="CG2-icon-cat-future"></span>未来・次世代</a></li><li><a href="https://app.codegrid.net/category/talk"><span class="CG2-icon-cat-talk"></span>座談会</a></li><li><a href="https://app.codegrid.net/category/mastering"><span class="CG2-icon-cat-mastering"></span>実践</a></li><li><a href="https://app.codegrid.net/category/elementary"><span class="CG2-icon-cat-elementary"></span>入門</a></li><li><a href="https://app.codegrid.net/category/standards"><span class="CG2-icon-cat-standards"></span>仕様解説</a></li><li><a href="https://app.codegrid.net/category/work-style"><span class="CG2-icon-cat-work-style"></span>仕事術</a></li><li><a href="https://app.codegrid.net/category/report"><span class="CG2-icon-cat-report"></span>レポート</a></li><li><a href="https://app.codegrid.net/category/design"><span class="CG2-icon-cat-design"></span>デザイン</a></li><li><a href="https://app.codegrid.net/category/discussion"><span class="CG2-icon-cat-discussion"></span>ディスカッション</a></li><li><a href="https://app.codegrid.net/category/interview"><span class="CG2-icon-cat-interview"></span>インタビュー</a></li><li><a href="https://app.codegrid.net/category/survey"><span class="CG2-icon-cat-survey"></span>アンケート</a></li></ul></div></div><div class="CG2-pageFooter__legalNav"><ul><li><a href="https://twitter.com/codegrid" target="_blank">公式Twitter</a></li><li><a href="https://www.codegrid.net/contact.html" target="_blank">お問い合わせ</a></li><li><a href="https://www.codegrid.net/terms.html" target="_blank">利用規約</a></li><li><a href="https://www.codegrid.net/privacy.html" target="_blank">プライバシーポリシー</a></li><li><a href="https://www.codegrid.net/tokutei.html" target="_blank">特定商取引法に基づく表示</a></li></ul><div class="CG2-pageFooter__company"><a href="https://www.pxgrid.com/" target="_blank">運営会社<img src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/pxg-logo.svg" alt="Pixel Grid" width="128" height="32"></a></div></div></div></footer><script src="./7これから始めるVue.js 2.0 - アプリケーションの状態管理 _ CodeGrid_files/build.js"></script></body></html>
